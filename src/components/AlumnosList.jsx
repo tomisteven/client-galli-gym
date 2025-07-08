@@ -23,7 +23,7 @@ const AlumnosList = () => {
   const fetchAlumnos = async () => {
     setLoading(true);
     try {
-      const response = await fetch(ENV.URL + "api/students");
+      const response = await fetch(ENV.URL);
       const data = await response.json();
       if (response.ok) {
         setAlumnos(data.reverse());
