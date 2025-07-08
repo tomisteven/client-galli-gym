@@ -36,7 +36,7 @@ const DniInput = ({ onStudentFound, onSearchStart }) => {
 
     try {
       const response = await fetch(
-        `${ENV.URL}/ingresa/${dni}`
+        `${ENV.URL}ingresa/${dni}`
       );
       const data = await response.json();
 
