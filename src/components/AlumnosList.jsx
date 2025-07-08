@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
+import { ENV } from "../env";
 
 const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -22,7 +23,7 @@ const AlumnosList = () => {
   const fetchAlumnos = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/students");
+      const response = await fetch(ENV.URL + "api/students");
       const data = await response.json();
       if (response.ok) {
         setAlumnos(data.reverse());
@@ -60,7 +61,7 @@ const AlumnosList = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/students/agregar-pago/${currentStudent.dni}`,
+        `h${ENV.URL}agregar-pago/${currentStudent.dni}`,
         {
           method: "POST",
           headers: {

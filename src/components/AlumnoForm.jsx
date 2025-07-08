@@ -1,6 +1,7 @@
 // frontend/src/components/AlumnoForm.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ENV } from "../env";
 
 const AlumnoForm = () => {
   const { dni } = useParams();
@@ -18,7 +19,7 @@ const AlumnoForm = () => {
     joinDate: new Date().toISOString().split("T")[0],
     medicamento: "Ninguno",
     patologias: "Ninguna",
-    activo: true
+    activo: true,
   });
 
   const [loading, setLoading] = useState(!!dni);
@@ -29,9 +30,7 @@ const AlumnoForm = () => {
     if (dni) {
       const fetchAlumno = async () => {
         try {
-          const response = await fetch(
-            `http://localhost:5000/api/students/alumno/${dni}`
-          );
+          const response = await fetch(`${ENV.URL}alumno/${dni}`);
           const data = await response.json();
           if (response.ok) {
             const adjustedData = {
@@ -43,7 +42,7 @@ const AlumnoForm = () => {
                 : new Date().toISOString().split("T")[0],
               medicamento: data.medicamento || "Ninguno",
               patologias: data.patologias || "Ninguna",
-              activo: data.activo !== undefined ? data.activo : true
+              activo: data.activo !== undefined ? data.activo : true,
             };
             setAlumno(adjustedData);
           } else {
@@ -74,9 +73,7 @@ const AlumnoForm = () => {
 
     try {
       const method = dni ? "PUT" : "POST";
-      const url = dni
-        ? `http://localhost:5000/api/students/editar/${dni}`
-        : "http://localhost:5000/api/students/nuevo";
+      const url = dni ? `${ENV.URL}editar/${dni}` : `${ENV.URL}nuevo`;
 
       const response = await fetch(url, {
         method,

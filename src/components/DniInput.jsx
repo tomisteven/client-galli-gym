@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ENV } from "../env";
 
 const DniInput = ({ onStudentFound, onSearchStart }) => {
   const [dni, setDni] = useState("");
@@ -35,7 +36,7 @@ const DniInput = ({ onStudentFound, onSearchStart }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/students/ingresa/${dni}`
+        `${ENV.URL}/ingresa/${dni}`
       );
       const data = await response.json();
 
