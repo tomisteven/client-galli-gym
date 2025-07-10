@@ -62,7 +62,7 @@ const AlumnosList = () => {
 
     try {
       const response = await fetch(
-        `h${ENV.URL}agregar-pago/${currentStudent.dni}`,
+        `${ENV.URL}agregar-pago/${currentStudent.dni}`,
         {
           method: "POST",
           headers: {
@@ -101,22 +101,38 @@ const AlumnosList = () => {
   };
 
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString("es-ES", options);
+  // Si la fecha viene en formato MongoDB { $date: ... }
+  let isoDate = dateString;
+  if (dateString && typeof dateString === 'object' && dateString.$date) {
+    isoDate = dateString.$date;
+  }
+
+  // Crear fecha sin ajuste de zona horaria
+  const date = new Date(isoDate);
+
+  // Ajustar para compensar la zona horaria
+  const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC'  // Forzar zona horaria UTC
   };
 
+  return adjustedDate.toLocaleDateString('es-ES', options);
+};
   const calculateStatus = (dueDate) => {
     const today = new Date();
     const due = new Date(dueDate);
     return due >= today ? "Al día" : "Vencido";
   };
 
-  if (loading) return <Loading />
+  if (loading) return <Loading />;
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
     <div className="alumnos-list">
-
       {/* Modal para agregar pago */}
       {showModal && currentStudent && (
         <div className="modal-backdrop">
@@ -216,6 +232,7 @@ const AlumnosList = () => {
               <th>Nombre</th>
               <th>Telefono</th>
               <th>Plan</th>
+              <th>Ingreso</th>
               <th>Vencimiento</th>
               <th>Estado</th>
               <th></th>
@@ -236,9 +253,12 @@ const AlumnosList = () => {
               .map((alumno) => (
                 <tr key={alumno.dni}>
                   <td>{alumno.dni}</td>
-                  <td>{alumno.name} {alumno.lastName}</td>
+                  <td>
+                    {alumno.name} {alumno.lastName}
+                  </td>
                   <td>{alumno.phone}</td>
                   <td>{alumno.planType}</td>
+                  <td>{formatDate(alumno.joinDate)}</td>
                   <td>{formatDate(alumno.paymentDueDate)}</td>
                   <td>
                     <span

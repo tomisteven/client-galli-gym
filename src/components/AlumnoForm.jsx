@@ -48,7 +48,7 @@ const AlumnoForm = () => {
             };
             setAlumno(adjustedData);
           } else {
-            toast.error(data.error || "Alumno no encontrado")
+            toast.error(data.error || "Alumno no encontrado");
             setError(data.error || "Alumno no encontrado");
           }
         } catch (err) {
@@ -88,7 +88,11 @@ const AlumnoForm = () => {
 
       const data = await response.json();
       if (response.ok) {
-        toast.success(dni ? "Alumno actualizado correctamente" : "Alumno creado correctamente");
+        toast.success(
+          dni
+            ? "Alumno actualizado correctamente"
+            : "Alumno creado correctamente"
+        );
         navigate("/alumnos");
       } else {
         toast.error(data.error || "Error al guardar los datos");
@@ -102,8 +106,7 @@ const AlumnoForm = () => {
     }
   };
 
-  if (loading)
-    return <Loading />
+  if (loading) return <Loading />;
   if (error) return <div className="error">{error}</div>;
 
   return (
@@ -173,9 +176,9 @@ const AlumnoForm = () => {
           </div>
 
           <div className="form-group">
-            <label>Fecha de Nacimiento</label>
+            <label>Edad</label>
             <input
-              type="date"
+              type="text"
               name="birthDate"
               value={alumno.birthDate}
               onChange={handleChange}

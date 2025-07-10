@@ -6,8 +6,6 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
   const [timeLeft, setTimeLeft] = useState(30);
 
   useEffect(() => {
-
-
     const timer = setInterval(() => {
       console.log(`Time left: ${timeLeft}s`);
 
@@ -148,12 +146,6 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
           <div className="detail-item">
             <span className="detail-label">Email:</span>
             <span className="detail-value">{student.email}</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Fecha de Nacimiento:</span>
-            <span className="detail-value">
-              {formatDate(student.birthDate)}
-            </span>
           </div>
         </div>
       </div>
