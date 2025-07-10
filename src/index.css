@@ -1129,3 +1129,175 @@ table th {
     right: 100px;
   }
 }
+
+/* Estilos para el nuevo botón de agregar pago */
+.btn-add-payment {
+  background-color: #9c27b0;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 5px;
+}
+
+.btn-add-payment:hover {
+  background-color: #7b1fa2;
+  transform: translateY(-2px);
+}
+
+/* Ajustes para los botones en la tabla */
+.td-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Modal de Historial de Pagos */
+.payment-history-modal {
+  max-width: 900px;
+  width: 95%;
+}
+
+.student-info-header {
+  background-color: #f5f7fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #4089fe;
+}
+
+.student-info-header h4 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+}
+
+.student-info-header p {
+  margin: 3px 0;
+  color: #555;
+}
+
+.payment-history-container {
+  max-height: 30vh;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.payment-history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payment-history-table th,
+.payment-history-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.payment-history-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.payment-history-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.payment-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.payment-status.completed {
+  background-color: #e6f7ee;
+  color: #0f9d58;
+  border: 1px solid #b7e4c7;
+}
+
+.no-payments {
+  text-align: center;
+  padding: 30px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.payment-summary {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.payment-summary p {
+  margin: 5px 0;
+}
+
+/* Botón de historial de pagos */
+.btn-payment-history {
+  background-color: #673ab7;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 5px;
+}
+
+.btn-payment-history:hover {
+  background-color: #5e35b1;
+  transform: translateY(-2px);
+}
+
+/* Scroll personalizado para el historial */
+.payment-history-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.payment-history-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.payment-history-container::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 4px;
+}
+
+.payment-history-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.warning-message {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ffeeba;
+  margin-top: 20px;
+  text-align: start;
+  font-size: 14px;
+}
