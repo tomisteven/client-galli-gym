@@ -1,6 +1,6 @@
 // frontend/src/App.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import {
   BrowserRouter,
   Routes,
@@ -31,7 +31,7 @@ function AppRoutes() {
     }
     timeoutRef.current = setTimeout(() => {
       setCurrentStudent(null);
-    }, 300000);
+    }, 500000);
   };
 
   useEffect(() => {
@@ -56,7 +56,6 @@ function AppRoutes() {
 
   return (
     <div className="app">
-
       <Link to={"/"} className="voler-inicio">
         Inicio
       </Link>
@@ -97,7 +96,7 @@ function AppRoutes() {
           <Route path="/alumnos/nuevo" element={<AlumnoForm />} />
           <Route path="/alumnos/editar/:dni" element={<AlumnoForm />} />
         </Routes>
-         <ToastContainer />
+        <ToastContainer />
       </main>
     </div>
   );

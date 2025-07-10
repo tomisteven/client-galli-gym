@@ -122,8 +122,8 @@ const AlumnoForm = () => {
               name="dni"
               value={alumno.dni}
               onChange={handleChange}
-              required
-              disabled={!!dni}
+
+
               pattern="[0-9]{8}"
               title="El DNI debe tener 8 dígitos"
             />
@@ -136,7 +136,7 @@ const AlumnoForm = () => {
               name="name"
               value={alumno.name}
               onChange={handleChange}
-              required
+
             />
           </div>
         </div>
@@ -149,7 +149,7 @@ const AlumnoForm = () => {
               name="lastName"
               value={alumno.lastName}
               onChange={handleChange}
-              required
+
             />
           </div>
 
@@ -246,7 +246,7 @@ const AlumnoForm = () => {
               name="paymentDueDate"
               value={alumno.paymentDueDate}
               onChange={handleChange}
-              required
+
             />
           </div>
 
@@ -257,7 +257,7 @@ const AlumnoForm = () => {
               name="joinDate"
               value={alumno.joinDate}
               onChange={handleChange}
-              required
+
             />
           </div>
         </div>

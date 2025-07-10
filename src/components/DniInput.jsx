@@ -4,7 +4,7 @@ import { ENV } from "../env";
 import Loading from "./Loading";
 import { toast } from "react-toastify";
 
-const DniInput = ({ onStudentFound, onSearchStart }) => {
+const DniInput = ({ onStudentFound }) => {
   const [dni, setDni] = useState("");
   const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
@@ -36,7 +36,6 @@ const DniInput = ({ onStudentFound, onSearchStart }) => {
 
   const handleSearch = async () => {
     setLoading(true);
-    if (onSearchStart) onSearchStart();
 
     try {
       const response = await fetch(`${ENV.URL}ingresa/${dni}`);

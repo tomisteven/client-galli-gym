@@ -1,6 +1,7 @@
 // frontend/src/components/StudentProfile.jsx
 import React, { useState, useEffect } from "react";
 import PaymentHistory from "./PaymentHistory";
+import AttendanceStats from "./AttendanceStats";
 
 const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
   const [timeLeft, setTimeLeft] = useState(30);
@@ -17,7 +18,7 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
         }
         return prev - 1;
       });
-    }, 1000);
+    }, 1000000);
 
     return () => clearInterval(timer);
   }, [onClose, timeLeft]);
@@ -100,19 +101,7 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
 
       <div className="total-asistencias">
         <h3 className="total-asistencias-title">
-          Total de Asistencias en el mes de{" "}
-          {new Date().toLocaleString("default", { month: "long" })}:{" "}
-          {
-            student.asistencias.filter((fecha) => {
-              const asistenciaDate = new Date(fecha);
-              const hoy = new Date();
-              return (
-                asistenciaDate.getMonth() === hoy.getMonth() &&
-                asistenciaDate.getFullYear() === hoy.getFullYear()
-              );
-            }).length
-          }{" "}
-          / {student.planType === "Semanal" ? "12" : "26"}
+          <AttendanceStats asistencias={student.asistencias} />
         </h3>
       </div>
 
