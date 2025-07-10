@@ -1,7 +1,7 @@
 // frontend/src/components/AlumnosList.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaWhatsapp, FaMoneyBillWave, FaHistory } from "react-icons/fa";
+import { FaWhatsapp, FaMoneyBillWave, FaHistory, FaEdit } from "react-icons/fa";
 import { ENV } from "../env";
 import Loading from "./Loading";
 
@@ -529,7 +529,7 @@ const AlumnosList = () => {
                       to={`/alumnos/editar/${alumno.dni}`}
                       className="btn-edit"
                     >
-                      Editar
+                      <FaEdit />
                     </Link>
                     <button
                       className="btn-payment-history"
@@ -547,12 +547,28 @@ const AlumnosList = () => {
                       <FaMoneyBillWave /> Agregar Pago
                     </button>
                     <button
+                      style={{
+                        backgroundColor: "green",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        padding: "5px 10px",
+                        fontSize: "14px",
+                      }}
                       className="btn-edit-renovar"
                       onClick={() => openPaymentModal(alumno)}
                     >
-                      Renovar Plan
+                      Renovar
                     </button>
                     <button
+                      style={{
+                        backgroundColor: "red",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        padding: "5px 10px",
+                      }}
+                      className="btn-edit-renovar"
                       onClick={() => {
                         if (
                           window.confirm(
@@ -578,7 +594,6 @@ const AlumnosList = () => {
                         }
                       }}
                       disabled={isProcessing}
-                      className="btn-edit-baja"
                     >
                       X
                     </button>
