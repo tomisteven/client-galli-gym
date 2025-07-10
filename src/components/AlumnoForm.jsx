@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ENV } from "../env";
+import { toast } from "react-toastify";
+import Loading from "./Loading";
 
 const AlumnoForm = () => {
   const { dni } = useParams();
@@ -46,10 +48,11 @@ const AlumnoForm = () => {
             };
             setAlumno(adjustedData);
           } else {
+            toast.error(data.error || "Alumno no encontrado")
             setError(data.error || "Alumno no encontrado");
           }
         } catch (err) {
-          console.error("Error fetching alumno:", err);
+          toast.error(err);
           setError("Error de conexión");
         } finally {
           setLoading(false);
@@ -73,7 +76,7 @@ const AlumnoForm = () => {
 
     try {
       const method = dni ? "PUT" : "POST";
-      const url = dni ? `${ENV.URL}editar/${dni}` : `${ENV.URL}nuevo`;
+      const url = dni ? `${ENV.URL}actualizar/${dni}` : `${ENV.URL}nuevo`;
 
       const response = await fetch(url, {
         method,
@@ -85,12 +88,14 @@ const AlumnoForm = () => {
 
       const data = await response.json();
       if (response.ok) {
+        toast.success(dni ? "Alumno actualizado correctamente" : "Alumno creado correctamente");
         navigate("/alumnos");
       } else {
+        toast.error(data.error || "Error al guardar los datos");
         setError(data.error || "Error al guardar los datos");
       }
     } catch (err) {
-      console.error("Error al enviar el formulario:", err);
+      toast.error(err);
       setError("Error de conexión con el servidor");
     } finally {
       setIsSubmitting(false);
@@ -98,7 +103,7 @@ const AlumnoForm = () => {
   };
 
   if (loading)
-    return <div className="loading">Cargando datos del alumno...</div>;
+    return <Loading />
   if (error) return <div className="error">{error}</div>;
 
   return (

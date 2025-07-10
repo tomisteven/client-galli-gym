@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ENV } from "../env";
+import Loading from "./Loading";
+import { toast } from "react-toastify";
 
 const DniInput = ({ onStudentFound, onSearchStart }) => {
   const [dni, setDni] = useState("");
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
 
   // Enfocar el input automáticamente y mantenerlo enfocado
@@ -32,30 +35,44 @@ const DniInput = ({ onStudentFound, onSearchStart }) => {
   }, [dni]);
 
   const handleSearch = async () => {
+    setLoading(true);
     if (onSearchStart) onSearchStart();
 
     try {
-      const response = await fetch(
-        `${ENV.URL}ingresa/${dni}`
-      );
+      const response = await fetch(`${ENV.URL}ingresa/${dni}`);
       const data = await response.json();
 
       if (response.ok) {
         onStudentFound(data);
         // Limpiar el input después de encontrar un alumno
         setDni("");
+        setLoading(false);
       } else {
-        alert(data.error || "Estudiante no encontrado");
+        // Si no se encuentra el alumno, mostrar un mensaje de error
+        toast.warn(data.error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         onStudentFound(data.student);
         // Limpiar el input si hay error
         setDni("");
+        setLoading(false);
       }
     } catch (err) {
       alert("Error al conectar con el servidor");
       console.error("Error fetching student:", err);
       setDni("");
+      setLoading(false);
     }
   };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="dni-input-container">

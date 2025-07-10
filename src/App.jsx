@@ -1,5 +1,6 @@
 // frontend/src/App.jsx
 import React, { useState, useEffect, useRef } from "react";
+import { ToastContainer } from 'react-toastify';
 import {
   BrowserRouter,
   Routes,
@@ -96,6 +97,7 @@ function AppRoutes() {
           <Route path="/alumnos/nuevo" element={<AlumnoForm />} />
           <Route path="/alumnos/editar/:dni" element={<AlumnoForm />} />
         </Routes>
+         <ToastContainer />
       </main>
     </div>
   );

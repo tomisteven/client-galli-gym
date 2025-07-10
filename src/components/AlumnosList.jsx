@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 import { ENV } from "../env";
+import Loading from "./Loading";
 
 const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -110,11 +111,12 @@ const AlumnosList = () => {
     return due >= today ? "Al día" : "Vencido";
   };
 
-  if (loading) return <div className="loading">Cargando alumnos...</div>;
+  if (loading) return <Loading />
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
     <div className="alumnos-list">
+
       {/* Modal para agregar pago */}
       {showModal && currentStudent && (
         <div className="modal-backdrop">
@@ -212,11 +214,11 @@ const AlumnosList = () => {
             <tr>
               <th>DNI</th>
               <th>Nombre</th>
-              <th>Apellido</th>
+              <th>Telefono</th>
               <th>Plan</th>
               <th>Vencimiento</th>
               <th>Estado</th>
-              <th>Acciones</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -234,8 +236,8 @@ const AlumnosList = () => {
               .map((alumno) => (
                 <tr key={alumno.dni}>
                   <td>{alumno.dni}</td>
-                  <td>{alumno.name}</td>
-                  <td>{alumno.lastName}</td>
+                  <td>{alumno.name} {alumno.lastName}</td>
+                  <td>{alumno.phone}</td>
                   <td>{alumno.planType}</td>
                   <td>{formatDate(alumno.paymentDueDate)}</td>
                   <td>

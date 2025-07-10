@@ -6,7 +6,7 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
   const [timeLeft, setTimeLeft] = useState(30);
 
   useEffect(() => {
-    if (!document.body.classList.contains("kiosk-mode")) return;
+
 
     const timer = setInterval(() => {
       console.log(`Time left: ${timeLeft}s`);
