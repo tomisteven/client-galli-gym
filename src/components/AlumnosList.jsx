@@ -117,7 +117,7 @@ const AlumnosList = () => {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    timeZone: 'UTC'  // Forzar zona horaria UTC
+    timeZone: 'UTC'  // Forzar zona horaria UTC+
   };
 
   return adjustedDate.toLocaleDateString('es-ES', options);
@@ -158,13 +158,7 @@ const AlumnosList = () => {
               </p>
               <p>
                 <strong>Proximo Vencimiento</strong>{" "}
-                {formatDate(
-                  currentStudent.paymentDueDate
-                    ? new Date(currentStudent.paymentDueDate).setMonth(
-                        new Date(currentStudent.paymentDueDate).getMonth() + 1
-                      )
-                    : ""
-                )}
+                DESHABILITADO HASTA SUBIR TODOS LOS ALUMNOS EXISTENTES
               </p>
               <p>
                 <strong>Plan:</strong> {currentStudent.planType}

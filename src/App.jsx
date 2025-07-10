@@ -31,7 +31,7 @@ function AppRoutes() {
     }
     timeoutRef.current = setTimeout(() => {
       setCurrentStudent(null);
-    }, 100000);
+    }, 300000);
   };
 
   useEffect(() => {
