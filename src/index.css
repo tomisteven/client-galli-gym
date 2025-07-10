@@ -1096,7 +1096,6 @@ table th {
     position: relative;
     top: 70px;
     right: 15px;
-
     margin: auto;
   }
 
@@ -1117,5 +1116,16 @@ table th {
     position: static;
     margin-top: 15px;
     justify-content: center;
+  }
+
+  .list-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    margin: auto;
+    position: relative;
+    right: 100px;
   }
 }
