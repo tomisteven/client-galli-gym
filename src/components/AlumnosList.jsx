@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FaWhatsapp, FaMoneyBillWave, FaHistory, FaEdit } from "react-icons/fa";
 import { ENV } from "../env";
 import Loading from "./Loading";
+import ResumenAlumnos from "./ResumenAlumnos";
 
 const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -23,6 +24,16 @@ const AlumnosList = () => {
 
   const [showPaymentHistoryModal, setShowPaymentHistoryModal] = useState(false);
   const [paymentHistory, setPaymentHistory] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("todos"); // 'todos' | 'vencidos' | 'aldia'
+
+  const alumnosFiltrados = alumnos.filter((alumno) => {
+    const vencimiento = new Date(alumno.paymentDueDate);
+    const hoy = new Date();
+
+    if (filterStatus === "vencidos") return vencimiento < hoy;
+    if (filterStatus === "aldia") return vencimiento >= hoy;
+    return true; // 'todos'
+  });
 
   useEffect(() => {
     fetchAlumnos();
@@ -222,6 +233,7 @@ const AlumnosList = () => {
 
     return adjustedDate.toLocaleDateString("es-ES", options);
   };
+
   const calculateStatus = (dueDate) => {
     const today = new Date();
     const due = new Date(dueDate);
@@ -478,6 +490,8 @@ const AlumnosList = () => {
       </div>
 
       <div className="table-container">
+        <ResumenAlumnos alumnos={alumnos} setFilterStatus={setFilterStatus} />
+
         <table>
           <thead>
             <tr>
@@ -492,7 +506,7 @@ const AlumnosList = () => {
             </tr>
           </thead>
           <tbody>
-            {alumnos
+            {alumnosFiltrados
               .filter(
                 (alumno) =>
                   alumno.dni.includes(searchTerm) ||

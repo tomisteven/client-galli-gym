@@ -185,7 +185,7 @@ const AttendanceStats = ({ asistencias }) => {
             {weeklyStats.length > 0 ? (
               weeklyStats.map((week) => (
                 <div key={week.week} className="week-bar">
-                  <div className="bar-label">Semana {week.week}</div>
+                  <div className="bar-label">{}</div>
                   <div className="bar-container">
                     <div
                       className="bar-fill"

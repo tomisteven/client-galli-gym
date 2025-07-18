@@ -1,0 +1,48 @@
+.resumen-container {
+  display: flex;
+  gap: 10px;
+  justify-content: start;
+  flex-wrap: wrap;
+  height: auto;
+  margin-top: 15px;
+  cursor:pointer
+}
+
+.card {
+  width: 120px;
+  height: 85px;
+  border-radius: 15px;
+  padding: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  color: white;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.card p {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+/* Colores personalizados */
+.card-total {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+}
+
+.card-vencidos {
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+}
+
+.card-al-dia {
+  background: linear-gradient(135deg, #42e695, #3bb2b8);
+}

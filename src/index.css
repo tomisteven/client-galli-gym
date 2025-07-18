@@ -1302,3 +1302,36 @@ table th {
   text-align: start;
   font-size: 14px;
 }
+
+.strong-cantidad {
+  color: black;
+}
+
+.filter-button-estado-vencido {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.filter-button-estado-vencido:hover {
+  background-color: #c82333;
+}
+
+.filter-button-estado-aldia {
+  background-color: #28a745;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
