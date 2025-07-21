@@ -1,13 +1,16 @@
-// frontend/src/components/AlumnoForm.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ENV } from "../env";
 import { toast } from "react-toastify";
 import Loading from "./Loading";
+import Modal from "./Modal";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AlumnoForm = () => {
   const { dni } = useParams();
   const navigate = useNavigate();
+
   const [alumno, setAlumno] = useState({
     dni: "",
     name: "",
@@ -27,6 +30,9 @@ const AlumnoForm = () => {
   const [loading, setLoading] = useState(!!dni);
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     if (dni) {
@@ -37,11 +43,9 @@ const AlumnoForm = () => {
           if (response.ok) {
             const adjustedData = {
               ...data,
-              birthDate: data.birthDate.split("T")[0],
-              paymentDueDate: data.paymentDueDate.split("T")[0],
-              joinDate: data.joinDate
-                ? data.joinDate.split("T")[0]
-                : new Date().toISOString().split("T")[0],
+              birthDate: data.birthDate?.split("T")[0] || "",
+              paymentDueDate: data.paymentDueDate?.split("T")[0] || "",
+              joinDate: data.joinDate?.split("T")[0] || "",
               medicamento: data.medicamento || "Ninguno",
               patologias: data.patologias || "Ninguna",
               activo: data.activo !== undefined ? data.activo : true,
@@ -52,7 +56,8 @@ const AlumnoForm = () => {
             setError(data.error || "Alumno no encontrado");
           }
         } catch (err) {
-          toast.error(err);
+          toast.error("Error de conexión");
+          console.error(err);
           setError("Error de conexión");
         } finally {
           setLoading(false);
@@ -73,36 +78,75 @@ const AlumnoForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const method = dni ? "PUT" : "POST";
+    const url = dni ? `${ENV.URL}actualizar/${dni}` : `${ENV.URL}nuevo`;
 
     try {
-      const method = dni ? "PUT" : "POST";
-      const url = dni ? `${ENV.URL}actualizar/${dni}` : `${ENV.URL}nuevo`;
+      const formData = new FormData();
+
+      // Agregamos todos los campos del alumno al FormData
+      for (const key in alumno) {
+        formData.append(key, alumno[key]);
+      }
+
+      // Agregamos la imagen si hay
+      if (selectedImage) {
+        formData.append("image", selectedImage);
+      }
 
       const response = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(alumno),
+        body: formData,
       });
 
       const data = await response.json();
       if (response.ok) {
-        toast.success(
-          dni
-            ? "Alumno actualizado correctamente"
-            : "Alumno creado correctamente"
-        );
+        toast.success(dni ? "Alumno actualizado" : "Alumno creado");
         navigate("/alumnos");
       } else {
         toast.error(data.error || "Error al guardar los datos");
-        setError(data.error || "Error al guardar los datos");
+        setError(data.error);
       }
     } catch (err) {
-      toast.error(err);
-      setError("Error de conexión con el servidor");
+      toast.error("Error de conexión con el servidor");
+      console.error(err);
+      setError(err.message || "Error de conexión con el servidor");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!selectedImage || !alumno.dni) return;
+
+    setUploadingImage(true);
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+
+    try {
+      const response = await fetch(
+        `${ENV.URL}actualizar-imagen/${alumno.dni}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Imagen actualizada correctamente");
+        setAlumno((prev) => ({ ...prev, image: data.image }));
+        setShowImageModal(false);
+        setSelectedImage(null);
+      } else {
+        toast.error(data.error || "Error al subir imagen");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Error al subir imagen");
+      toast.error("Error al subir la imagen");
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -113,7 +157,36 @@ const AlumnoForm = () => {
     <div className="alumno-form">
       <h2>{dni ? "Editar Alumno" : "Nuevo Alumno"}</h2>
 
+      <div className="cont-img-alumno">
+        {alumno.image ? (
+          <img
+            className="img-alumno"
+            src={alumno.image}
+            alt="Imagen del alumno"
+          />
+        ) : (
+          <p style={{ color: "#888" }}>Sin imagen aún</p>
+        )}
+      </div>
+
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Foto del Alumno</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setSelectedImage(e.target.files[0])}
+          />
+          {selectedImage && (
+            <div style={{ marginTop: "10px" }}>
+              <img
+                src={URL.createObjectURL(selectedImage)}
+                alt="Vista previa"
+                style={{ width: "150px", height: "auto", objectFit: "cover" }}
+              />
+            </div>
+          )}
+        </div>
         <div className="form-row">
           <div className="form-group">
             <label>DNI *</label>
@@ -122,10 +195,9 @@ const AlumnoForm = () => {
               name="dni"
               value={alumno.dni}
               onChange={handleChange}
-
-
               pattern="[0-9]{8}"
               title="El DNI debe tener 8 dígitos"
+              required
             />
           </div>
 
@@ -136,7 +208,7 @@ const AlumnoForm = () => {
               name="name"
               value={alumno.name}
               onChange={handleChange}
-
+              required
             />
           </div>
         </div>
@@ -149,7 +221,7 @@ const AlumnoForm = () => {
               name="lastName"
               value={alumno.lastName}
               onChange={handleChange}
-
+              required
             />
           </div>
 
@@ -176,9 +248,9 @@ const AlumnoForm = () => {
           </div>
 
           <div className="form-group">
-            <label>Edad</label>
+            <label>Fecha de Nacimiento</label>
             <input
-              type="text"
+              type="date"
               name="birthDate"
               value={alumno.birthDate}
               onChange={handleChange}
@@ -186,7 +258,6 @@ const AlumnoForm = () => {
           </div>
         </div>
 
-        {/* Nuevos campos médicos */}
         <div className="form-row">
           <div className="form-group">
             <label>Medicamentos</label>
@@ -241,28 +312,39 @@ const AlumnoForm = () => {
         <div className="form-row">
           <div className="form-group">
             <label>Próximo Vencimiento *</label>
-            <input
-              type="date"
-              name="paymentDueDate"
-              value={alumno.paymentDueDate}
-              onChange={handleChange}
-
+            <DatePicker
+              selected={
+                alumno.paymentDueDate ? new Date(alumno.paymentDueDate) : null
+              }
+              onChange={(date) =>
+                setAlumno({
+                  ...alumno,
+                  paymentDueDate: date.toISOString().split("T")[0],
+                })
+              }
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Seleccionar fecha"
+              className="form-control"
             />
           </div>
 
           <div className="form-group">
             <label>Fecha de Ingreso</label>
-            <input
-              type="date"
-              name="joinDate"
-              value={alumno.joinDate}
-              onChange={handleChange}
-
+            <DatePicker
+              selected={alumno.joinDate ? new Date(alumno.joinDate) : null}
+              onChange={(date) =>
+                setAlumno({
+                  ...alumno,
+                  joinDate: date.toISOString().split("T")[0],
+                })
+              }
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Seleccionar fecha"
+              className="form-control"
             />
           </div>
         </div>
 
-        {/* Campo de estado activo */}
         <div className="form-row">
           <div className="form-group">
             <label>
@@ -291,6 +373,34 @@ const AlumnoForm = () => {
           </button>
         </div>
       </form>
+
+      {showImageModal && (
+        <Modal onClose={() => setShowImageModal(false)}>
+          <div className="image-modal">
+            <h3>Subir Imagen de Perfil</h3>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setSelectedImage(e.target.files[0])}
+            />
+            <div className="modal-actions">
+              <button
+                onClick={() => setShowImageModal(false)}
+                className="btn-cancel"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleImageUpload}
+                className="btn-submit"
+                disabled={uploadingImage || !selectedImage}
+              >
+                {uploadingImage ? "Subiendo..." : "Subir Imagen"}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

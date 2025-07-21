@@ -506,129 +506,144 @@ const AlumnosList = () => {
             </tr>
           </thead>
           <tbody>
-            {alumnosFiltrados
-              .filter(
+            {alumnosFiltrados &&
+              alumnosFiltrados.filter(
                 (alumno) =>
-                  alumno.dni.includes(searchTerm) ||
-                  alumno.name
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  alumno.lastName
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-              )
-              .map((alumno) => (
-                <tr key={alumno.dni}>
-                  <td>{alumno.dni}</td>
-                  <td>
-                    {alumno.name} {alumno.lastName}
-                  </td>
-                  <td>{alumno.phone}</td>
-                  <td>{alumno.planType}</td>
-                  <td>{formatDate(alumno.joinDate)}</td>
-                  <td>{formatDate(alumno.paymentDueDate)}</td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        calculateStatus(alumno.paymentDueDate) === "Al día"
-                          ? "success"
-                          : "danger"
-                      }`}
-                    >
-                      {calculateStatus(alumno.paymentDueDate)}
-                    </span>
-                  </td>
-                  <td className="td-acciones">
-                    <Link
-                      to={`/alumnos/editar/${alumno.dni}`}
-                      className="btn-edit"
-                    >
-                      <FaEdit />
-                    </Link>
-                    <button
-                      className="btn-payment-history"
-                      onClick={() => openPaymentHistoryModal(alumno)}
-                      title="Ver historial completo de pagos"
-                    >
-                      <FaHistory /> Historial
-                    </button>
-                    {/* Nuevo botón para AGREGAR PAGO al historial */}
-                    <button
-                      className="btn-add-payment"
-                      onClick={() => openAddPaymentModal(alumno)}
-                      title="Agregar pago al historial sin cambiar fecha de vencimiento"
-                    >
-                      <FaMoneyBillWave /> Agregar Pago
-                    </button>
-                    <button
-                      style={{
-                        backgroundColor: "green",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        padding: "5px 10px",
-                        fontSize: "14px",
-                      }}
-                      className="btn-edit-renovar"
-                      onClick={() => openPaymentModal(alumno)}
-                    >
-                      Renovar
-                    </button>
-                    <button
-                      style={{
-                        backgroundColor: "red",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        padding: "5px 10px",
-                      }}
-                      className="btn-edit-renovar"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            `¿Estás seguro de eliminar a ${alumno.name} ${alumno.lastName}?`
-                          )
-                        ) {
-                          fetch(`${ENV.URL}baja/${alumno.dni}`, {
-                            method: "DELETE",
-                          })
-                            .then((response) => {
-                              if (response.ok) {
-                                setAlumnos((prev) =>
-                                  prev.filter((a) => a.dni !== alumno.dni)
-                                );
-                              } else {
-                                throw new Error("Error al eliminar alumno");
-                              }
+                  (alumno.dni && alumno.dni.includes(searchTerm)) ||
+                  (alumno.name &&
+                    alumno.name
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())) ||
+                  (alumno.lastName &&
+                    alumno.lastName
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()))
+              ).length > 0 &&
+              alumnosFiltrados
+                .filter(
+                  (alumno) =>
+                    (alumno.dni && alumno.dni.includes(searchTerm)) ||
+                    (alumno.name &&
+                      alumno.name
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())) ||
+                    (alumno.lastName &&
+                      alumno.lastName
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()))
+                )
+                .map((alumno) => (
+                  <tr key={alumno.dni}>
+                    <td>{alumno.dni}</td>
+                    <td>
+                      {alumno.name} {alumno.lastName}
+                    </td>
+                    <td>{alumno.phone}</td>
+                    <td>{alumno.planType}</td>
+                    <td>{formatDate(alumno.joinDate)}</td>
+                    <td>{formatDate(alumno.paymentDueDate)}</td>
+                    <td>
+                      <span
+                        className={`status-badge ${
+                          calculateStatus(alumno.paymentDueDate) === "Al día"
+                            ? "success"
+                            : "danger"
+                        }`}
+                      >
+                        {calculateStatus(alumno.paymentDueDate)}
+                      </span>
+                    </td>
+                    <td className="td-acciones">
+                      <Link
+                        to={`/alumnos/editar/${alumno.dni}`}
+                        className="btn-edit"
+                      >
+                        <FaEdit />
+                      </Link>
+                      <button
+                        className="btn-payment-history"
+                        onClick={() => openPaymentHistoryModal(alumno)}
+                        title="Ver historial completo de pagos"
+                      >
+                        <FaHistory /> Historial
+                      </button>
+                      {/* Nuevo botón para AGREGAR PAGO al historial */}
+                      <button
+                        className="btn-add-payment"
+                        onClick={() => openAddPaymentModal(alumno)}
+                        title="Agregar pago al historial sin cambiar fecha de vencimiento"
+                      >
+                        <FaMoneyBillWave /> Agregar Pago
+                      </button>
+                      <button
+                        style={{
+                          backgroundColor: "green",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "5px",
+                          padding: "5px 10px",
+                          fontSize: "14px",
+                        }}
+                        className="btn-edit-renovar"
+                        onClick={() => openPaymentModal(alumno)}
+                      >
+                        Renovar
+                      </button>
+                      <button
+                        style={{
+                          backgroundColor: "red",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "5px",
+                          padding: "5px 10px",
+                        }}
+                        className="btn-edit-renovar"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `¿Estás seguro de eliminar a ${alumno.name} ${alumno.lastName}?`
+                            )
+                          ) {
+                            fetch(`${ENV.URL}baja/${alumno.dni}`, {
+                              method: "DELETE",
                             })
-                            .catch((err) => {
-                              console.error("Error deleting student:", err);
-                              alert("Error al eliminar el alumno");
-                            });
-                        }
-                      }}
-                      disabled={isProcessing}
-                    >
-                      X
-                    </button>
+                              .then((response) => {
+                                if (response.ok) {
+                                  setAlumnos((prev) =>
+                                    prev.filter((a) => a.dni !== alumno.dni)
+                                  );
+                                } else {
+                                  throw new Error("Error al eliminar alumno");
+                                }
+                              })
+                              .catch((err) => {
+                                console.error("Error deleting student:", err);
+                                alert("Error al eliminar el alumno");
+                              });
+                          }
+                        }}
+                        disabled={isProcessing}
+                      >
+                        X
+                      </button>
 
-                    <FaWhatsapp
-                      size={30}
-                      color="green"
-                      className="btn-whatsapp"
-                      onClick={() =>
-                        window.open(
-                          `https://wa.me/549${alumno.phone}?text=Hola, ${
-                            alumno.name
-                          }! ¿Cómo estás? te escribo desde Galli Gym para informarte sobre tu estado de cuenta y próximos vencimientos. ${formatDate(
-                            alumno.paymentDueDate
-                          )}, Este es un mensaje automático, por favor no respondas.`
-                        )
-                      }
-                    />
-                  </td>
-                </tr>
-              ))}
+                      <FaWhatsapp
+                        size={30}
+                        color="green"
+                        className="btn-whatsapp"
+                        onClick={() =>
+                          window.open(
+                            `https://wa.me/549${alumno.phone}?text=Hola, ${
+                              alumno.name
+                            }! ¿Cómo estás? te escribo desde Galli Gym para informarte sobre tu estado de cuenta y próximos vencimientos. ${formatDate(
+                              alumno.paymentDueDate
+                            )}, Este es un mensaje automático, por favor no respondas.`
+                          )
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
