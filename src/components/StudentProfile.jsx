@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from "react";
 import PaymentHistory from "./PaymentHistory";
 import AttendanceStats from "./AttendanceStats";
+import { useNavigate } from "react-router-dom";
 
 const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
   const [timeLeft, setTimeLeft] = useState(30);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const timer = setInterval(() => {
       console.log(`Time left: ${timeLeft}s`);
@@ -63,6 +64,7 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
               <img
                 src={student.image}
                 alt={`${student.name} ${student.lastName}`}
+                onClick={() => navigate(`/alumnos/editar/${student._id}`)}
               />
             ) : (
               <div className="placeholder-avatar">
@@ -70,9 +72,16 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
               </div>
             )}
           </div>
+
           <div className="student-meta">
             <h2>
               {student.name} {student.lastName}{" "}
+              <button
+                className="btn-edit"
+                onClick={() => navigate(`/alumnos/editar/${student.dni}`)}
+              >
+                Editar
+              </button>
             </h2>
             <div className="status-container">
               <div
