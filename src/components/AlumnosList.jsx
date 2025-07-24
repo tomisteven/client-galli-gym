@@ -177,7 +177,7 @@ const AlumnosList = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ amount: parseFloat(addPaymentAmount) }),
+          body: JSON.stringify({ amount: addPaymentAmount }),
         }
       );
 
@@ -202,7 +202,7 @@ const AlumnosList = () => {
       setAlumnos(updatedAlumnos);
       closeAddPaymentModal();
     } catch (err) {
-      console.error("Error al agregar pago:", err);
+      console.error("Error al agregar pago HISTORIAL:", err);
       setPaymentError(err.message);
     } finally {
       setIsProcessing(false);

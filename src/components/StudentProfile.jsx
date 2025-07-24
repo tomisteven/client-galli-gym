@@ -59,13 +59,16 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
       <div className="profile-header">
         <div className="student-info">
           <div className="avatar">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.42 0-8 3.58-8 8h16c0-4.42-3.58-8-8-8Z" />
-            </svg>
+            {student.image ? (
+              <img
+                src={student.image}
+                alt={`${student.name} ${student.lastName}`}
+              />
+            ) : (
+              <div className="placeholder-avatar">
+                <span>{student.name ? student.name[0] : "A"}</span>
+              </div>
+            )}
           </div>
           <div className="student-meta">
             <h2>

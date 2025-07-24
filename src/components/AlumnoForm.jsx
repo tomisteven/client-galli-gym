@@ -30,9 +30,9 @@ const AlumnoForm = () => {
   const [loading, setLoading] = useState(!!dni);
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showImageModal, setShowImageModal] = useState(false);
+  //const [showImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
+  //const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     if (dni) {
@@ -84,9 +84,16 @@ const AlumnoForm = () => {
     try {
       const formData = new FormData();
 
-      // Agregamos todos los campos del alumno al FormData
       for (const key in alumno) {
-        formData.append(key, alumno[key]);
+        const value = alumno[key];
+
+        if (value === null || value === undefined || value === "") continue;
+
+        if (key === "paymentHistory" && Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value);
+        }
       }
 
       // Agregamos la imagen si hay
@@ -116,7 +123,7 @@ const AlumnoForm = () => {
     }
   };
 
-  const handleImageUpload = async () => {
+  /* const handleImageUpload = async () => {
     if (!selectedImage || !alumno.dni) return;
 
     setUploadingImage(true);
@@ -148,7 +155,7 @@ const AlumnoForm = () => {
     } finally {
       setUploadingImage(false);
     }
-  };
+  }; */
 
   if (loading) return <Loading />;
   if (error) return <div className="error">{error}</div>;
@@ -250,7 +257,7 @@ const AlumnoForm = () => {
           <div className="form-group">
             <label>Fecha de Nacimiento</label>
             <input
-              type="date"
+              type="text"
               name="birthDate"
               value={alumno.birthDate}
               onChange={handleChange}
@@ -374,7 +381,7 @@ const AlumnoForm = () => {
         </div>
       </form>
 
-      {showImageModal && (
+      {/* {showImageModal && (
         <Modal onClose={() => setShowImageModal(false)}>
           <div className="image-modal">
             <h3>Subir Imagen de Perfil</h3>
@@ -400,7 +407,7 @@ const AlumnoForm = () => {
             </div>
           </div>
         </Modal>
-      )}
+      )} */}
     </div>
   );
 };
