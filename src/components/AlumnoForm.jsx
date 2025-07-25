@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ENV } from "../env";
 import { toast } from "react-toastify";
 import Loading from "./Loading";
-import Modal from "./Modal";
 import DatePicker from "react-datepicker";
+
 import "react-datepicker/dist/react-datepicker.css";
 
 const AlumnoForm = () => {
@@ -19,9 +19,9 @@ const AlumnoForm = () => {
     phone: "",
     birthDate: "",
     planType: "Full",
-    paymentDueDate: "",
+    paymentDueDate: new Date(),
     status: "Al día",
-    joinDate: new Date().toISOString().split("T")[0],
+    joinDate: new Date(),
     medicamento: "Ninguno",
     patologias: "Ninguna",
     activo: true,
@@ -30,9 +30,20 @@ const AlumnoForm = () => {
   const [loading, setLoading] = useState(!!dni);
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //const [showImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  //const [uploadingImage, setUploadingImage] = useState(false);
+
+  const parseDateWithoutTimezone = (dateString) => {
+    if (!dateString) return null;
+
+    // Si la fecha ya es un objeto Date, devolverlo directamente
+    if (dateString instanceof Date) return dateString;
+
+    // Para fechas en formato ISO (como las de MongoDB)
+    const date = new Date(dateString);
+
+    // Ajustar por el offset de zona horaria para obtener la fecha "pura"
+    return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+  };
 
   useEffect(() => {
     if (dni) {
@@ -40,17 +51,21 @@ const AlumnoForm = () => {
         try {
           const response = await fetch(`${ENV.URL}alumno/${dni}`);
           const data = await response.json();
+
           if (response.ok) {
-            const adjustedData = {
+            setAlumno({
               ...data,
-              birthDate: data.birthDate?.split("T")[0] || "",
-              paymentDueDate: data.paymentDueDate?.split("T")[0] || "",
-              joinDate: data.joinDate?.split("T")[0] || "",
+              birthDate: data.birthDate || "",
+              paymentDueDate: data.paymentDueDate
+                ? parseDateWithoutTimezone(data.paymentDueDate)
+                : new Date(),
+              joinDate: data.joinDate
+                ? parseDateWithoutTimezone(data.joinDate)
+                : new Date(),
               medicamento: data.medicamento || "Ninguno",
               patologias: data.patologias || "Ninguna",
               activo: data.activo !== undefined ? data.activo : true,
-            };
-            setAlumno(adjustedData);
+            });
           } else {
             toast.error(data.error || "Alumno no encontrado");
             setError(data.error || "Alumno no encontrado");
@@ -78,6 +93,7 @@ const AlumnoForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
     const method = dni ? "PUT" : "POST";
     const url = dni ? `${ENV.URL}actualizar/${dni}` : `${ENV.URL}nuevo`;
 
@@ -86,17 +102,22 @@ const AlumnoForm = () => {
 
       for (const key in alumno) {
         const value = alumno[key];
-
         if (value === null || value === undefined || value === "") continue;
 
-        if (key === "paymentHistory" && Array.isArray(value)) {
+        // Manejo especial para fechas
+        if (value instanceof Date) {
+          // Crear una fecha en UTC para evitar problemas de zona horaria
+          const utcDate = new Date(
+            Date.UTC(value.getFullYear(), value.getMonth(), value.getDate())
+          );
+          formData.append(key, utcDate.toISOString().split("T")[0]);
+        } else if (key === "paymentHistory" && Array.isArray(value)) {
           formData.append(key, JSON.stringify(value));
         } else {
           formData.append(key, value);
         }
       }
 
-      // Agregamos la imagen si hay
       if (selectedImage) {
         formData.append("image", selectedImage);
       }
@@ -107,6 +128,7 @@ const AlumnoForm = () => {
       });
 
       const data = await response.json();
+
       if (response.ok) {
         toast.success(dni ? "Alumno actualizado" : "Alumno creado");
         navigate("/alumnos");
@@ -122,40 +144,6 @@ const AlumnoForm = () => {
       setIsSubmitting(false);
     }
   };
-
-  /* const handleImageUpload = async () => {
-    if (!selectedImage || !alumno.dni) return;
-
-    setUploadingImage(true);
-    const formData = new FormData();
-    formData.append("image", selectedImage);
-
-    try {
-      const response = await fetch(
-        `${ENV.URL}actualizar-imagen/${alumno.dni}`,
-        {
-          method: "PUT",
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-      if (response.ok) {
-        toast.success("Imagen actualizada correctamente");
-        setAlumno((prev) => ({ ...prev, image: data.image }));
-        setShowImageModal(false);
-        setSelectedImage(null);
-      } else {
-        toast.error(data.error || "Error al subir imagen");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Error al subir imagen");
-      toast.error("Error al subir la imagen");
-    } finally {
-      setUploadingImage(false);
-    }
-  }; */
 
   if (loading) return <Loading />;
   if (error) return <div className="error">{error}</div>;
@@ -194,6 +182,7 @@ const AlumnoForm = () => {
             </div>
           )}
         </div>
+
         <div className="form-row">
           <div className="form-group">
             <label>DNI *</label>
@@ -320,13 +309,11 @@ const AlumnoForm = () => {
           <div className="form-group">
             <label>Próximo Vencimiento *</label>
             <DatePicker
-              selected={
-                alumno.paymentDueDate ? new Date(alumno.paymentDueDate) : null
-              }
+              selected={alumno.paymentDueDate}
               onChange={(date) =>
                 setAlumno({
                   ...alumno,
-                  paymentDueDate: date.toISOString().split("T")[0],
+                  paymentDueDate: date,
                 })
               }
               dateFormat="dd/MM/yyyy"
@@ -338,11 +325,11 @@ const AlumnoForm = () => {
           <div className="form-group">
             <label>Fecha de Ingreso</label>
             <DatePicker
-              selected={alumno.joinDate ? new Date(alumno.joinDate) : null}
+              selected={alumno.joinDate}
               onChange={(date) =>
                 setAlumno({
                   ...alumno,
-                  joinDate: date.toISOString().split("T")[0],
+                  joinDate: date,
                 })
               }
               dateFormat="dd/MM/yyyy"
@@ -380,34 +367,6 @@ const AlumnoForm = () => {
           </button>
         </div>
       </form>
-
-      {/* {showImageModal && (
-        <Modal onClose={() => setShowImageModal(false)}>
-          <div className="image-modal">
-            <h3>Subir Imagen de Perfil</h3>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setSelectedImage(e.target.files[0])}
-            />
-            <div className="modal-actions">
-              <button
-                onClick={() => setShowImageModal(false)}
-                className="btn-cancel"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleImageUpload}
-                className="btn-submit"
-                disabled={uploadingImage || !selectedImage}
-              >
-                {uploadingImage ? "Subiendo..." : "Subir Imagen"}
-              </button>
-            </div>
-          </div>
-        </Modal>
-      )} */}
     </div>
   );
 };
