@@ -48,18 +48,6 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
     return due >= today ? "Al día" : "Vencido";
   };
 
-  /* const formatDateTime = (dateString) => {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    return date.toLocaleString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }; */
-
   // Handlers de hover
   const handleMouseEnter = () => {
     hoverRef.current = true;
@@ -80,15 +68,16 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
         style={{
           position: "absolute",
           top: 8,
-          right: 8,
-          background: "#f0f0f0",
-          padding: "4px 8px",
+          right: 25,
+          background: "red",
+
+          padding: "8px 12px",
           borderRadius: "6px",
           fontSize: "12px",
           zIndex: 1,
         }}
       >
-        Cierra en: {timeLeft}s
+        ⚠ Cierra en: {timeLeft}s
       </div>
 
       {calculateStatus(student.paymentDueDate) === "Al día" ? (
@@ -97,9 +86,7 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
         </div>
       ) : (
         <div className="status-alumno-inhabilitado">
-          <p>
-            INHABILITADO VENCIO EL {formatDate(student.paymentDueDate)}
-          </p>
+          <p>INHABILITADO VENCIO EL {formatDate(student.paymentDueDate)}</p>
         </div>
       )}
 
@@ -212,15 +199,11 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
         <div className="detail-row">
           <div className="detail-item">
             <span className="detail-label">Fecha de Ingreso:</span>
-            <span className="detail-value">
-              {formatDate(student.joinDate)}
-            </span>
+            <span className="detail-value">{formatDate(student.joinDate)}</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Plan Actual:</span>
-            <span className="detail-value plan-badge">
-              {student.planType}
-            </span>
+            <span className="detail-value plan-badge">{student.planType}</span>
           </div>
         </div>
       </div>
