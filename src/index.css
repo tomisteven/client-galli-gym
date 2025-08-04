@@ -792,6 +792,19 @@ table th {
   z-index: 1000;
   text-decoration: none;
 }
+.panel-administracion-2 {
+  position: fixed;
+  top: 10px;
+  right: 190px;
+  background-color: #2db612;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 1000;
+  text-decoration: none;
+}
 .voler-inicio {
   position: fixed;
   top: 10px;

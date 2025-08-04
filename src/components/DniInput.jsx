@@ -78,6 +78,9 @@ const DniInput = ({ onStudentFound }) => {
       <Link to={"/alumnos"} className="panel-administracion">
         Administracion
       </Link>
+       <Link to={"/asistencias"} className="panel-administracion-2">
+        Asistencias
+      </Link>
       <div class="group">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
           <g>

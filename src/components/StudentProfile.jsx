@@ -1,41 +1,55 @@
 // frontend/src/components/StudentProfile.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import PaymentHistory from "./PaymentHistory";
 import AttendanceStats from "./AttendanceStats";
 import { useNavigate } from "react-router-dom";
 
 const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
   const [timeLeft, setTimeLeft] = useState(30);
+  const hoverRef = useRef(false);
+  const intervalRef = useRef(null);
   const navigate = useNavigate();
+
+  // Countdown logic
+  const tick = useCallback(() => {
+    setTimeLeft((prev) => {
+      if (hoverRef.current) return prev; // pausado si está el mouse encima
+      if (prev <= 1) {
+        // se acabó el tiempo
+        onClose?.();
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, [onClose]);
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      console.log(`Time left: ${timeLeft}s`);
+    intervalRef.current = setInterval(tick, 1000); // cada segundo
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [tick]);
 
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          onClose();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000000);
-
-    return () => clearInterval(timer);
-  }, [onClose, timeLeft]);
+  // Reiniciar timer si cambia student (usuario nuevo que se abre)
+  useEffect(() => {
+    setTimeLeft(30);
+  }, [student]);
 
   const formatDate = (dateString) => {
+    if (!dateString) return "-";
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("es-ES", options);
   };
 
   const calculateStatus = (dueDate) => {
+    if (!dueDate) return "Sin fecha";
     const today = new Date();
     const due = new Date(dueDate);
     return due >= today ? "Al día" : "Vencido";
   };
 
-  const formatDateTime = (dateString) => {
+  /* const formatDateTime = (dateString) => {
+    if (!dateString) return "-";
     const date = new Date(dateString);
     return date.toLocaleString("es-ES", {
       day: "2-digit",
@@ -44,19 +58,51 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
       hour: "2-digit",
       minute: "2-digit",
     });
+  }; */
+
+  // Handlers de hover
+  const handleMouseEnter = () => {
+    hoverRef.current = true;
+  };
+  const handleMouseLeave = () => {
+    hoverRef.current = false;
   };
 
   return (
-    <div className="student-profile">
+    <div
+      className="student-profile"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ position: "relative" }}
+    >
+      {/* opcional: mostrar contador para debug / feedback */}
+      <div
+        style={{
+          position: "absolute",
+          top: 8,
+          right: 8,
+          background: "#f0f0f0",
+          padding: "4px 8px",
+          borderRadius: "6px",
+          fontSize: "12px",
+          zIndex: 1,
+        }}
+      >
+        Cierra en: {timeLeft}s
+      </div>
+
       {calculateStatus(student.paymentDueDate) === "Al día" ? (
         <div className="status-alumno-habilitado">
-          <p>HABILITADO</p>
+          <p>HABILITADO HASTA {formatDate(student.paymentDueDate)}</p>
         </div>
       ) : (
         <div className="status-alumno-inhabilitado">
-          <p>INHABILITADO</p>
+          <p>
+            INHABILITADO VENCIO EL {formatDate(student.paymentDueDate)}
+          </p>
         </div>
       )}
+
       <div className="profile-header">
         <div className="student-info">
           <div className="avatar">
@@ -64,7 +110,8 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
               <img
                 src={student.image}
                 alt={`${student.name} ${student.lastName}`}
-                onClick={() => navigate(`/alumnos/editar/${student._id}`)}
+                onClick={() => navigate(`/alumnos/editar/${student.dni}`)}
+                style={{ cursor: "pointer" }}
               />
             ) : (
               <div className="placeholder-avatar">
@@ -99,7 +146,13 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
         </div>
 
         <div className="action-buttons">
-          <button className="btn-close" onClick={() => setCurrentStudent(null)}>
+          <button
+            className="btn-close"
+            onClick={() => {
+              setCurrentStudent?.(null);
+              onClose?.();
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -151,19 +204,6 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
         </div>
       </div>
 
-      <div className="attendance-section">
-        <h3>Historial de Asistencias</h3>
-        {student.asistencias && student.asistencias.length > 0 ? (
-          <ul className="attendance-list">
-            {student.asistencias.map((date, index) => (
-              <li key={index}>· {formatDateTime(date)}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No hay asistencias registradas</p>
-        )}
-      </div>
-
       <div
         className="detail-card full-width"
         style={{ backgroundColor: "#fff7e8", borderLeft: "4px solid orange" }}
@@ -172,11 +212,15 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
         <div className="detail-row">
           <div className="detail-item">
             <span className="detail-label">Fecha de Ingreso:</span>
-            <span className="detail-value">{formatDate(student.joinDate)}</span>
+            <span className="detail-value">
+              {formatDate(student.joinDate)}
+            </span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Plan Actual:</span>
-            <span className="detail-value plan-badge">{student.planType}</span>
+            <span className="detail-value plan-badge">
+              {student.planType}
+            </span>
           </div>
         </div>
       </div>

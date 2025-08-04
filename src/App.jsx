@@ -13,6 +13,7 @@ import DniInput from "./components/DniInput";
 import StudentProfile from "./components/StudentProfile";
 import AlumnosList from "./components/AlumnosList";
 import AlumnoForm from "./components/AlumnoForm";
+import AsistenciasPorDia from "./components/AsistenciasPorDia";
 import "./index.css";
 
 // Componente principal con rutas
@@ -95,6 +96,7 @@ function AppRoutes() {
           <Route path="/alumnos" element={<AlumnosList />} />
           <Route path="/alumnos/nuevo" element={<AlumnoForm />} />
           <Route path="/alumnos/editar/:dni" element={<AlumnoForm />} />
+          <Route path="/asistencias" element={<AsistenciasPorDia />} />
         </Routes>
         <ToastContainer />
       </main>
