@@ -44,7 +44,7 @@ export default function AsistenciasPorDia() {
     setData(null);
     try {
       const resp = await fetch(
-        `${ENV.URL_LOCAL}asistencias-por-dia/${fechaStr}`,
+        `${ENV.URL}asistencias-por-dia/${fechaStr}`,
         {
           headers: { "Content-Type": "application/json" },
           method: "GET",
