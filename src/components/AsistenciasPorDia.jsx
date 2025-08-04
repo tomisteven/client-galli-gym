@@ -43,13 +43,10 @@ export default function AsistenciasPorDia() {
     setError("");
     setData(null);
     try {
-      const resp = await fetch(
-        `${ENV.URL}asistencias-por-dia/${fechaStr}`,
-        {
-          headers: { "Content-Type": "application/json" },
-          method: "GET",
-        }
-      );
+      const resp = await fetch(`${ENV.URL}asistencias-por-dia/${fechaStr}`, {
+        headers: { "Content-Type": "application/json" },
+        method: "GET",
+      });
       if (!resp.ok) {
         const errBody = await resp.json().catch(() => ({}));
         throw new Error(
@@ -116,10 +113,10 @@ export default function AsistenciasPorDia() {
       </div>
       <div className="navigation">
         <button onClick={bajarUnDia} className="btn-navigation-dias">
-          <span className="material-icons">Anterior</span>
+          <span className="material-icons"> - Anterior </span>
         </button>
         <button onClick={subirUnDia} className="btn-navigation-dias">
-          <span className="material-icons">Siguiente</span>
+          <span className="material-icons"> + Siguiente</span>
         </button>
       </div>
 
@@ -130,7 +127,6 @@ export default function AsistenciasPorDia() {
               Total: {data ? data.cantidad : "--"} alumno(s)
             </p>
             <h2>Asistencias del {fecha}</h2>
-
           </div>
           {loading && <div className="loader">Cargando...</div>}
         </div>
