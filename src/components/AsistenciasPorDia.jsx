@@ -115,10 +115,10 @@ export default function AsistenciasPorDia() {
         </div>
       </div>
       <div className="navigation">
-        <button onClick={subirUnDia} className="btn-navigation-dias">
+        <button onClick={bajarUnDia} className="btn-navigation-dias">
           <span className="material-icons">Anterior</span>
         </button>
-        <button onClick={bajarUnDia} className="btn-navigation-dias">
+        <button onClick={subirUnDia} className="btn-navigation-dias">
           <span className="material-icons">Siguiente</span>
         </button>
       </div>
