@@ -8,7 +8,7 @@
   cursor:pointer
 }
 
-.card {
+.card-r {
   width: 120px;
   height: 85px;
   border-radius: 15px;
@@ -19,16 +19,16 @@
   transition: transform 0.2s ease;
 }
 
-.card:hover {
+.card-r:hover {
   transform: translateY(-5px);
 }
 
-.card h3 {
+.card-r h3 {
   font-size: 2rem;
   margin: 0;
 }
 
-.card p {
+.card-r p {
   margin-top: 10px;
   font-size: 0.8rem;
   letter-spacing: 0.5px;

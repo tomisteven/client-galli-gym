@@ -12,19 +12,19 @@ const ResumenAlumnos = ({ alumnos, setFilterStatus }) => {
 
   return (
     <div className="resumen-container">
-      <div className="card card-total" onClick={() => setFilterStatus("todos")}>
+      <div className="card-r card-total" onClick={() => setFilterStatus("todos")}>
         <h3>{alumnos.length}</h3>
         <p>Inscriptos</p>
       </div>
       <div
-        className="card card-vencidos"
+        className="card-r card-vencidos"
         onClick={() => setFilterStatus("vencidos")}
       >
         <h3>{vencidos}</h3>
         <p>Vencidos</p>
       </div>
       <div
-        className="card card-al-dia"
+        className="card-r card-al-dia"
         onClick={() => setFilterStatus("aldia")}
       >
         <h3>{alDia}</h3>
