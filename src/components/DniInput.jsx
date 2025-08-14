@@ -27,6 +27,7 @@ const DniInput = ({ onStudentFound }) => {
 
   // Escuchar cambios en el DNI
   useEffect(() => {
+    //onStudentFound(null); // Limpiar el estado al iniciar
     // Si el DNI tiene 8 dígitos, realizar búsqueda automáticamente
     if (dni.length === 8) {
       handleSearch();
@@ -40,7 +41,7 @@ const DniInput = ({ onStudentFound }) => {
     try {
       const response = await fetch(`${ENV.URL}ingresa/${dni}`);
       const data = await response.json();
-
+      onStudentFound(null);
       if (response.ok) {
         onStudentFound(data);
         // Limpiar el input después de encontrar un alumno
@@ -78,7 +79,7 @@ const DniInput = ({ onStudentFound }) => {
       <Link to={"/alumnos"} className="panel-administracion">
         Administracion
       </Link>
-       <Link to={"/asistencias"} className="panel-administracion-2">
+      <Link to={"/asistencias"} className="panel-administracion-2">
         Asistencias
       </Link>
       <div class="group">

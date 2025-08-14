@@ -139,7 +139,7 @@ body {
 }
 
 .avatar {
-  width:120px;
+  width: 120px;
   height: 120px;
   background: #f0f7ff;
   border-radius: 50%;
@@ -777,6 +777,12 @@ table th {
   border-radius: 4px;
   text-decoration: none;
   font-size: 0.9rem;
+}
+
+.placeholder-avatar {
+  color: #0a8f1e;
+  font-weight: bold;
+  font-size: 2.5rem;
 }
 
 .panel-administracion {

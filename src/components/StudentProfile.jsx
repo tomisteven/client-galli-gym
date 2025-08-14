@@ -102,7 +102,8 @@ const StudentProfile = ({ student, onClose, setCurrentStudent }) => {
               />
             ) : (
               <div className="placeholder-avatar">
-                <span>{student.name ? student.name[0] : "A"}</span>
+                {student.name.charAt(0).toUpperCase()}
+                {student.lastName.charAt(0).toUpperCase()}
               </div>
             )}
           </div>

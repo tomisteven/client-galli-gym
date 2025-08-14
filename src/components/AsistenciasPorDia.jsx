@@ -124,7 +124,8 @@ export default function AsistenciasPorDia() {
         <div className="card-header">
           <div>
             <p className="subtext">
-              Total: {data ? data.cantidad : "--"} alumno(s)
+              Total: {data ? data.cantidad || data.alumnos.length : "--"}{" "}
+              alumno(s)
             </p>
             <h2>Asistencias del {fecha}</h2>
           </div>

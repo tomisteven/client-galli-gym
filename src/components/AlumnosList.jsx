@@ -5,6 +5,7 @@ import { FaWhatsapp, FaMoneyBillWave, FaHistory, FaEdit } from "react-icons/fa";
 import { ENV } from "../env";
 import Loading from "./Loading";
 import ResumenAlumnos from "./ResumenAlumnos";
+import ModalAsistencias from "./ModalAsistencias";
 
 const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -17,6 +18,7 @@ const AlumnosList = () => {
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentError, setPaymentError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   //const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false); // Nuevo estado para modal de agregar pago
@@ -399,6 +401,13 @@ const AlumnosList = () => {
         </div>
       )}
 
+      {selectedStudent && (
+        <ModalAsistencias
+          student={selectedStudent}
+          onClose={() => setSelectedStudent(null)}
+        />
+      )}
+
       {/* Nuevo Modal para AGREGAR PAGO al historial */}
       {showAddPaymentModal && currentStudent && (
         <div className="modal-backdrop">
@@ -560,6 +569,13 @@ const AlumnosList = () => {
                       >
                         <FaEdit />
                       </Link>
+                      <button
+                        className="btn-asistencias"
+                        onClick={() => setSelectedStudent(alumno)}
+                        title="Ver asistencias de este alumno"
+                      >
+                        Asistencias
+                      </button>
                       <button
                         className="btn-payment-history"
                         onClick={() => openPaymentHistoryModal(alumno)}
